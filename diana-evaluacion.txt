@@ -1,0 +1,116 @@
+CREATE DATABASE empresa;
+USE empresa;
+
+DROP DATABASE empresa;
+
+CREATE TABLE Empleado (
+    id_em INT PRIMARY KEY NOT NULL,
+    nombre_em VARCHAR(50),
+    sex_em CHAR(1),
+    fecha_nac_em DATE,
+    fech_incorporacion_em DATE,
+    salario_em DECIMAL(10, 2),
+    cargo_em INT,
+    id_jefe_em INT,
+    cod_depto_em INT,
+    FOREIGN KEY (cargo_em) REFERENCES Cargo(id_cargo),
+    FOREIGN KEY (cod_depto_em) REFERENCES Departamento(id_dep)
+);
+
+CREATE TABLE Cargo(
+id_cargo INT PRIMARY KEY NOT NULL,
+nom_cargo VARCHAR(50)
+);
+
+CREATE TABLE Departamento(
+id_dep INT PRIMARY KEY NOT NULL,
+nom_dep VARCHAR(50),
+ciudad_dep VARCHAR(50),
+director_dep VARCHAR(50)
+);
+
+INSERT INTO Departamento (id_dep, nom_dep, ciudad_dep, director_dep) VALUES
+(1000, 'Gerencia', 'Cali', '31.840.269'),
+(1500, 'Producción', 'Cali', '16.211.383'),
+(2000, 'Ventas', 'Cali', '31.178.144'),
+(300, 'Investigacion', 'Cali', '16.759.060'),
+(3500,'Mercadeo','Cali','22.222.222'),
+(2100,'Ventas','Popayan','31.751.219'),
+(2200,'Ventas','Buga','768.782'),
+(2300,'Ventas','Cartago','737.689'),
+(4000,'Mantenimiento','Cali','33.333.333'),
+(4100,'Mantenimiento','Popayan','888.888'),
+(4200,'Mantenimiento','Buga','11.111.111');
+
+INSERT INTO Cargo (id_cargo, nom_cargo) VALUES
+(1,'Gerente'),
+(2,'Director'),
+(3,'Jefe Ventas'),
+(4,'Investigador'),
+(5,'Jefe Mercadeo'),
+(6,'Vendedor'),
+(7,'Jefe Mecanicos'),
+(8,'Mecanico'),
+(9,'Asesor'),
+(10,'Secretaria'),
+(11,'Tecnico');
+
+INSERT INTO Empleado (id_em, nombre_em, sex_em, fecha_nac_em, fech_incorporacion_em, salario_em, cargo_em, id_jefe_em, cod_depto_em) VALUES
+(31840269, 'Maria Rojas', 'F', '1959-01-15', '1990-05-16', 6250000, 1, NULL, 1000),
+(16211383, 'Luis Perez', 'M', '1958-02-25', '2009-01-01', 6250000, 2, 31840269, 1500),
+(31178144, 'Rosa Angulo', 'F', '1957-03-16', '1992-01-01', 6250000, 3, 31840269, 2000),
+(16759060, 'Dario Casas', 'M', '1967-05-06', '1992-01-01', 4500000, 4, 31178144, 300),
+(22222222, 'Carla Lopez', 'F', '1975-11-05', '2005-10-16', 4500000, 5, 31840269, 3500),
+(76878922, 'Joaquin Rosas', 'M', '1974-07-07', '2005-04-16', 4500000, 7, 31178144, 2200),
+(1130222, 'Julian Mora', 'M', '1978-07-10', '1991-07-01', 800000, 8, 31178144, 2300),
+(1130555, 'Carolina Rios', 'F', '1979-04-01', '1990-10-16', 1250000, 9, 6117134, 4000),
+(111111, 'Irene Diaz', 'F', '1979-09-28', '2005-06-01', 1250000, 10, 33333333, 4100),
+(33333333, 'Elisa Rojas', 'F', '1979-09-28', '2005-06-01', 4500000, 11, 31840269, 4200);
+
+
+SELECT * FROM Empleado;
+SELECT * FROM Departamento;
+
+
+#listar los empleados con sexo femenino con sueldo menor o igual a 3.500.000
+select *  from empleado
+WHERE sex_em = 'F' AND salario_em <= 3500000;
+
+#listar los empleados cuyo suelto es menor o igual a 1.500.000 de sexo masculino
+SELECT nombre_em, salario_em
+FROM Empleado
+WHERE salario_em <= 1500000 AND sex_em = 'M';
+
+
+
+#divida los empleados generando un grupo cuyo nombre inicie con la letra j y termine en la letra z
+
+SELECT nombre_em, Cargo.nom_cargo
+FROM Empleado
+JOIN Cargo ON Empleado.cargo_em = Cargo.id_cargo
+WHERE nombre_em LIKE 'J%' AND nombre_em LIKE '%Z%'
+ORDER BY nombre_em ASC;
+
+#obtener los datos de los empleados con cargo tecnico 
+
+SELECT e.*
+FROM Empleado e
+JOIN Cargo c ON e.cargo_em = c.id_cargo
+WHERE c.nom_cargo = 'tecnico';
+
+
+
+#listar el nombre de los departamentos ordenado por ciudad en orden inverso 
+SELECT nom_dep FROM Departamento ORDER BY ciudad_dep DESC;
+
+
+#entregar el nombre del utimo empleado de la lista por orden alfabetico
+SELECT nombre_em
+FROM Empleado
+ORDER BY nombre_em DESC
+LIMIT 1;
+
+
+#listar el salario y nombre de aquellos empleados que tiene sueldo superior a 1.100.000
+SELECT * FROM Empleado
+WHERE salario_em > 1100000;
